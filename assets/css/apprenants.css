@@ -994,9 +994,102 @@
 }
 
 .btn-edit {
-  padding: 3% 10%;
+  padding: 3% 15%;
   background-color: #038e89;
   color: white;
-  border: none;
+  border: 2px solid white;
   cursor: pointer;
+}
+
+#lineApprenant {
+  cursor: pointer;
+}
+
+.lineApprenant-selected {
+  background-color: #038e89 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+#transfertReferentiel {
+  font-size: 1.5em;
+  padding: 10px;
+  border-radius: 6px;
+  color: var(--main-color);
+  border: 2px solid var(--main-color);
+  font-weight: bold;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 2px;
+}
+
+.btn-carte {
+  padding: 3% 15%;
+  background-color: darkred;
+  color: white;
+  border: 2px solid white;
+  cursor: pointer;
+}
+.carte-modal {
+  margin: 0% auto !important;
+  width: 33% !important;
+  height: 97vh !important;
+  display: flex;
+  position: relative;
+}
+.carte-img {
+  background-image: url("../img/carte.jpeg") !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.image-app {
+  background-color: #53c4d3;
+  width: 285px;
+  height: 270px;
+  position: absolute;
+  top: 25.6%;
+  left: 23%;
+}
+
+.nom-app {
+  background-color: #37888e;
+  width: 160px;
+  height: 90px;
+  position: absolute;
+  top: 70%;
+  left: 17%;
+  color: white;
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-app {
+  background-color: #37888e;
+  width: 85px;
+  height: 87px;
+  position: absolute;
+  right: 3.8%;
+  bottom: 6%;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-app canvas,
+.qr-code-app img {
+  width: 90% !important;
+  height: 90% !important;
 }

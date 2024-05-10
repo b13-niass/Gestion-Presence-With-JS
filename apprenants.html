@@ -10,6 +10,7 @@
       src="https://kit.fontawesome.com/d2ba3c872c.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   </head>
   <body>
     <input type="checkbox" id="menu_checkbox" />
@@ -113,6 +114,7 @@
         >
       </nav>
     </div>
+
     <section class="home-section">
       <div class="title">
         <div class="left">Apprenants</div>
@@ -180,6 +182,11 @@
             <div class="line2">
               <div class="div1">Liste Des Apprenants <span>(10)</span></div>
               <div class="buttons">
+                <select name="transfertReferentiel" id="transfertReferentiel">
+                  <option disabled selected value="">
+                    Changer de référentiel
+                  </option>
+                </select>
                 <button
                   class="btn-hover color-5"
                   onclick="window.location.href='#popup'"
@@ -575,6 +582,28 @@
             <button class="btn-checkbox">Enregistrer</button>
           </div>
         </div>
+      </form>
+    </div>
+
+    <div id="popupCarte" class="modal">
+      <input type="checkbox" id="popup_checkbox" />
+      <form class="modal-content carte-modal carte-img">
+        <div class="head">
+          <a href="#" class="close">×</a>
+          <h5>Carte de l'étudiant</h5>
+        </div>
+        <div class="image-app">
+          <img
+            class="img-app-photo"
+            src=""
+            alt=""
+            srcset=""
+            width="100%"
+            height="100%"
+          />
+        </div>
+        <div class="nom-app"></div>
+        <div class="qr-code-app" id="qr-code-app"></div>
       </form>
     </div>
 

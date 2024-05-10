@@ -18,9 +18,13 @@ const searchFilter = document.querySelector("#searchFilter");
 const formControls = document.querySelectorAll(".form-control");
 const formControl2 = document.querySelectorAll(".form-control2");
 const pagination = document.querySelector(".pagination");
-let peer_page = 5;
-let listeApprenantFilter;
-let listeApprenantForTri;
+const transfertReferentiel = document.querySelector("#transfertReferentiel");
+
+let selectedApprenntForTransfert = [],
+  peer_page = 5,
+  listeApprenantFilter,
+  listeApprenantForTri,
+  listeReferentielForTransfert;
 // let promotion_active;
 
 /** Declaration Fonction*/
@@ -85,6 +89,7 @@ const buildSelectRef = () => {
     referentielId.insertAdjacentHTML("beforeend", templateSelectRef);
   });
 };
+
 const templateListApprenant = (apprenant) => {
   return `
   <tr class="line" id="lineApprenant" data-id="${apprenant.id}">
@@ -121,14 +126,18 @@ const templateListApprenant = (apprenant) => {
   <td class="bloc">
     <div class="col-bas">${findRefById(apprenant.referentiel).libelle}</div>
   </td>
-  <td class="bloc">
+  <td class="bloc flex-column">
     <button type="button" class="btn-edit" 
     onclick="window.location.href='#popupEdit'"
      >Editer</button>
+     <button type="button" class="btn-carte" 
+    onclick="window.location.href='#popupCarte'"
+     >Carte</button>
   </td>
 </tr>
   `;
 };
+
 const buildListApprenants = () => {
   listeApprenantFilter.forEach((apprenant) => {
     tbodyList.insertAdjacentHTML("beforeend", templateListApprenant(apprenant));
@@ -144,6 +153,7 @@ const addTempApprenant = function (apprenant) {
   buildListApprenants();
   eventForAllApprenants();
   eventLoadPopUpEditApprenants();
+  eventLoadPopUpCarteApprenants();
 };
 
 const showSuccees = (fils) => {
@@ -282,12 +292,106 @@ const editApprenantToListeFilter = (id, editApprenant) => {
   });
 };
 
+const referentielsWithoutThis = (idApprenant) => {
+  let apprenant = findAllApprenants().find(
+    (apprenant) => apprenant.id === idApprenant
+  );
+  listeReferentielForTransfert = listeReferentielForTransfert.filter(
+    (referentiel) => referentiel.id != apprenant.referentiel
+  );
+};
+
+const buildReferentielTransfert = () => {
+  transfertReferentiel.innerHTML =
+    '<option disabled selected value="">Changer de référentiel</option>';
+  listeReferentielForTransfert.forEach((referentiel) => {
+    let template = `<option value="${referentiel.id}">${referentiel.libelle}</option>`;
+    transfertReferentiel.insertAdjacentHTML("beforeend", template);
+  });
+};
+
+const hasOneWithThisQuery = (query, elements) => {
+  for (let index = 0; index < elements.length; index++) {
+    const element = elements[index];
+    if (element.classList.contains(query)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const hasOneWithThisReferentiel = (cssClass, elements, libelle) => {
+  let lineApprenants = document.querySelectorAll("#lineApprenant");
+
+  for (let index = 0; index < lineApprenants.length; index++) {
+    const element = lineApprenants[index];
+    let elementReferentiel =
+      element.querySelectorAll(".col-bas")[6].textContent;
+    // console.log(element.classList.contains(cssClass));
+    if (element.classList.contains(cssClass) && elementReferentiel == libelle) {
+      console.log(elementReferentiel == libelle);
+      return true;
+      // break;
+    }
+  }
+  return false;
+};
+
+const resetSelectTransfert = () => {
+  transfertReferentiel.innerHTML =
+    '<option disabled selected value="">Changer de référentiel</option>';
+};
+
 const eventForAllApprenants = () => {
   let lineApprenants = document.querySelectorAll("#lineApprenant");
   lineApprenants.forEach((lineApprenant) => {
+    /** Liste Event for the Apprenants Line (tr) */
+    // lineApprenant-selected
+    let idApprenant = parseInt(lineApprenant.dataset.id);
+    let apprenant = findAllApprenants().find(
+      (apprenant) => apprenant.id === idApprenant
+    );
+    lineApprenant.addEventListener("click", (e) => {
+      // lineApprenant.classList.toggle("lineApprenant-selected");
+      if (!lineApprenant.classList.contains("lineApprenant-selected")) {
+        lineApprenant.classList.add("lineApprenant-selected");
+        referentielsWithoutThis(idApprenant);
+        buildReferentielTransfert();
+        selectedApprenntForTransfert.push(idApprenant);
+        // console.log(lineApprenant);
+      } else {
+        lineApprenant.classList.remove("lineApprenant-selected");
+        // console.log(lineApprenant);
+        if (
+          hasOneWithThisReferentiel(
+            "lineApprenant-selected",
+            lineApprenants,
+            findRefById(apprenant.referentiel).libelle
+          )
+        ) {
+          selectedApprenntForTransfert.splice(
+            selectedApprenntForTransfert.indexOf(idApprenant),
+            1
+          );
+        } else {
+          if (hasOneWithThisQuery("lineApprenant-selected", lineApprenants)) {
+            selectedApprenntForTransfert.splice(
+              selectedApprenntForTransfert.indexOf(idApprenant),
+              1
+            );
+            listeReferentielForTransfert.push(
+              findRefById(apprenant.referentiel)
+            );
+            buildReferentielTransfert();
+          } else {
+            resetSelectTransfert();
+          }
+        }
+      }
+    });
+    /**  Liste of Events for the Apprenants Column (td) */
     let appColumns = lineApprenant.querySelectorAll(".toedit");
     let valueToEdit = "";
-    // Liste of Events for the Apprenants
     appColumns.forEach((appColumn) => {
       let parentAppColumn = appColumn.parentElement.parentElement;
       appColumn.addEventListener("dblclick", (appColumnEvent) => {
@@ -418,6 +522,7 @@ const eventLoadPopUpEditApprenants = function () {
     let btnEdit = lineApprenant.querySelector(".btn-edit");
     btnEdit.addEventListener("click", (e) => {
       // let parentAppColumn = appColumn.parentElement.parentElement;
+      e.stopPropagation();
       let userId = parseInt(lineApprenant.dataset.id);
       const idInput = document.createElement("input");
       idInput.type = "hidden";
@@ -458,6 +563,29 @@ const eventLoadPopUpEditApprenants = function () {
   });
 };
 
+const eventLoadPopUpCarteApprenants = function () {
+  let lineApprenants = document.querySelectorAll("#lineApprenant");
+  lineApprenants.forEach((lineApprenant) => {
+    let btnCarte = lineApprenant.querySelector(".btn-carte");
+    btnCarte.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let imgAppPhoto = document.querySelector(".img-app-photo");
+      let nomApp = document.querySelector(".nom-app");
+      let qrCodeApp = document.querySelector(".qr-code-app");
+      let userId = parseInt(lineApprenant.dataset.id);
+
+      let user = findAllApprenants().find(
+        (apprenant) => apprenant.id == userId
+      );
+      qrCodeApp.innerHTML = "";
+      let qrcode = new QRCode("qr-code-app", `${user.telephone}`);
+      console.log(qrcode);
+      imgAppPhoto.src = user.image;
+      nomApp.innerHTML = `<h3>${user.nom}</h3><h5>${user.prenom}</h5>`;
+    });
+  });
+};
+
 function removeListElement() {
   let lineApprenants = document.querySelectorAll("#lineApprenant");
   lineApprenants.forEach((lineApprenant) => {
@@ -483,6 +611,7 @@ const buildTemplatePagination = (listeApprenantFilter) => {
       });
       eventForAllApprenants();
       eventLoadPopUpEditApprenants();
+      eventLoadPopUpCarteApprenants();
     });
   });
 };
@@ -555,6 +684,7 @@ function sortingTable(param, order, listeApprenantForTri) {
 /** Initialisation */
 listeApprenantFilter = findAllApprenants();
 listeApprenantForTri = findAllApprenants();
+listeReferentielForTransfert = findRefByPromo(findPromoActive());
 buildTemplatePagination(listeApprenantFilter);
 listeApprenantFilter = paginateList(listeApprenantFilter, 1, 5);
 promo.value = findPromoActive();
@@ -563,6 +693,7 @@ buildSelectRef();
 buildListApprenants();
 eventForAllApprenants();
 eventLoadPopUpEditApprenants();
+eventLoadPopUpCarteApprenants();
 
 /** Evenements */
 
@@ -706,6 +837,7 @@ searchFilter.addEventListener("input", (evt) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else {
     listeApprenantFilter = findAllApprenants();
 
@@ -715,6 +847,7 @@ searchFilter.addEventListener("input", (evt) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
 });
 
@@ -732,6 +865,7 @@ parNom.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parNom.children[0].classList.contains("filter-color")) {
     parNom.children[0].classList.toggle("filter-color");
     parNom.children[1].classList.toggle("filter-color");
@@ -742,6 +876,7 @@ parNom.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parNom.children[1].classList.contains("filter-color")) {
     parNom.children[0].classList.toggle("filter-color");
     parNom.children[1].classList.toggle("filter-color");
@@ -752,6 +887,7 @@ parNom.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
 });
 
@@ -769,6 +905,7 @@ parPrenom.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parPrenom.children[0].classList.contains("filter-color")) {
     parPrenom.children[0].classList.toggle("filter-color");
     parPrenom.children[1].classList.toggle("filter-color");
@@ -779,6 +916,7 @@ parPrenom.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parPrenom.children[1].classList.contains("filter-color")) {
     parPrenom.children[0].classList.toggle("filter-color");
     parPrenom.children[1].classList.toggle("filter-color");
@@ -789,6 +927,7 @@ parPrenom.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
 });
 
@@ -806,6 +945,7 @@ parEmail.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parEmail.children[0].classList.contains("filter-color")) {
     parEmail.children[0].classList.toggle("filter-color");
     parEmail.children[1].classList.toggle("filter-color");
@@ -816,6 +956,7 @@ parEmail.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parEmail.children[1].classList.contains("filter-color")) {
     parEmail.children[0].classList.toggle("filter-color");
     parEmail.children[1].classList.toggle("filter-color");
@@ -826,6 +967,7 @@ parEmail.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
 });
 
@@ -843,6 +985,7 @@ parGenre.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parGenre.children[0].classList.contains("filter-color")) {
     parGenre.children[0].classList.toggle("filter-color");
     parGenre.children[1].classList.toggle("filter-color");
@@ -853,6 +996,7 @@ parGenre.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parGenre.children[1].classList.contains("filter-color")) {
     parGenre.children[0].classList.toggle("filter-color");
     parGenre.children[1].classList.toggle("filter-color");
@@ -863,6 +1007,7 @@ parGenre.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
 });
 
@@ -880,6 +1025,7 @@ parTel.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parTel.children[0].classList.contains("filter-color")) {
     parTel.children[0].classList.toggle("filter-color");
     parTel.children[1].classList.toggle("filter-color");
@@ -890,6 +1036,7 @@ parTel.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parTel.children[1].classList.contains("filter-color")) {
     parTel.children[0].classList.toggle("filter-color");
     parTel.children[1].classList.toggle("filter-color");
@@ -900,6 +1047,7 @@ parTel.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
 });
 
@@ -917,6 +1065,7 @@ parRef.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parRef.children[0].classList.contains("filter-color")) {
     parRef.children[0].classList.toggle("filter-color");
     parRef.children[1].classList.toggle("filter-color");
@@ -927,6 +1076,7 @@ parRef.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   } else if (parRef.children[1].classList.contains("filter-color")) {
     parRef.children[0].classList.toggle("filter-color");
     parRef.children[1].classList.toggle("filter-color");
@@ -937,5 +1087,25 @@ parRef.addEventListener("click", (e) => {
     buildListApprenants();
     eventForAllApprenants();
     eventLoadPopUpEditApprenants();
+    eventLoadPopUpCarteApprenants();
   }
+});
+
+transfertReferentiel.addEventListener("change", (e) => {
+  // console.log(e.target.value);
+  let idReferentiel = parseInt(e.target.value);
+  selectedApprenntForTransfert.forEach((idApp) => {
+    editApprenantToDB(idApp, { referentiel: idReferentiel });
+    editApprenantToListeFilter(idApp, { referentiel: idReferentiel });
+    editApprenantToListeTri(idApp, { referentiel: idReferentiel });
+  });
+  buildTemplatePagination(listeApprenantForTri);
+  listeApprenantFilter = paginateList(listeApprenantForTri, 1, 5);
+  removeListElement();
+  buildListApprenants();
+  eventForAllApprenants();
+  eventLoadPopUpEditApprenants();
+  eventLoadPopUpCarteApprenants();
+  listeReferentielForTransfert = findRefByPromo(findPromoActive());
+  resetSelectTransfert();
 });

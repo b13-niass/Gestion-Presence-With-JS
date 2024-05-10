@@ -67,7 +67,7 @@ const DB = {
       lieuNaissance: "Dakar",
       numeroCNI: "00191878822",
       image:
-        "https://img.freepik.com/photos-premium/etudiant-positif-du-millenaire-noir-livres-jaune_116547-16835.jpg",
+        "https://img.freepik.com/photos-gratuite/etudiant-heureux-belle-jeune-femme-africaine-tenant-cahiers_171337-14002.jpg",
       referentiel: 2,
       promotion: 6,
     },
@@ -99,7 +99,7 @@ const DB = {
       lieuNaissance: "Dakar",
       numeroCNI: "00191878822",
       image:
-        "https://img.freepik.com/photos-premium/etudiant-positif-du-millenaire-noir-livres-jaune_116547-16835.jpg",
+        "https://img.freepik.com/photos-premium/etudiant-afro-americain-joyeux-heureux-qui-reve-obtenir-diplome-porte-papiers-bloc-notes_580432-100.jpg",
       referentiel: 2,
       promotion: 6,
     },
@@ -147,7 +147,7 @@ const DB = {
       lieuNaissance: "Dakar",
       numeroCNI: "00191878822",
       image:
-        "https://img.freepik.com/photos-premium/etudiant-positif-du-millenaire-noir-livres-jaune_116547-16835.jpg",
+        "https://img.freepik.com/photos-premium/etudiant-afro-americain-joyeux-heureux-qui-reve-obtenir-diplome-porte-papiers-bloc-notes_580432-100.jpg",
       referentiel: 1,
       promotion: 6,
     },
