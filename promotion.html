@@ -161,11 +161,9 @@
                     />
                   </div>
                 </div>
-              
-                <div class="first">
-                  message
-                </div>
-              
+
+                <div class="first">message</div>
+
                 <div class="buttons">
                   <button class="btn-hover color-7" name="addRef" type="submit">
                     Ajouter Réferenciel(s)
@@ -185,6 +183,23 @@
     <div class="fixed-icon">
       <i class="fa-solid fa-gear"></i>
     </div>
+   
   </body>
   <script src="assets/js/main.js"></script>
+
+  <script>
+    const ouvrirPopup = document.getElementById("openPopup");
+    const popup = document.getElementById("popupPromo");
+    const fermerPopup = document.querySelector(".close-btn");
+
+    ouvrirPopup.addEventListener("click", () => (popup.style.display = "flex"));
+
+    fermerPopup.addEventListener("click", () => (popup.style.display = "none"));
+
+    window.addEventListener("click", (e) => {
+      if (e.target === popup) {
+        popup.style.display = "none";
+      }
+    });
+  </script>
 </html>

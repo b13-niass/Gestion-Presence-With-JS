@@ -16,4 +16,20 @@ const telephoneValidator = (telephone) => {
   return telephoneRegExp.test(telephone);
 };
 
-export { emailValidator, cniValidator, telephoneValidator };
+const libellePromotionValidator = (libelle) => {
+  const libelleRegExp = /^promotion\s\d+$/;
+  return libelleRegExp.test(libelle);
+};
+
+const numPromoValidator = (numPromo) => {
+  const numPromoRegExp = /^\d+$/;
+  return numPromoRegExp.test(numPromo);
+};
+
+export {
+  emailValidator,
+  cniValidator,
+  telephoneValidator,
+  numPromoValidator,
+  libellePromotionValidator,
+};

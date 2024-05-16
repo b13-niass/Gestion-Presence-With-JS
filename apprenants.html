@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="./assets/css/main.css" />
     <link rel="stylesheet" href="./assets/css/apprenants.css" />
+    <link rel="stylesheet" href="./assets/css/modalPromo.css" />
     <script
       src="https://kit.fontawesome.com/d2ba3c872c.js"
       crossorigin="anonymous"
@@ -80,42 +81,42 @@
         <h3 class="menu">- MENU</h3>
       </div>
       <nav class="navbar">
-        <a href="#"
+        <a href="#" data-page="dashboard"
           ><i class="fa fa-align-right" aria-hidden="true"></i
           ><span>Dashboard</span></a
         >
-        <a href="#"
+        <a href="#" data-page="apprenant"
           ><i class="fa fa-graduation-cap" aria-hidden="true"></i
           ><span>Apprenants</span></a
         >
-        <a href="#"
+        <a href="#" data-page="promos"
           ><i class="fa fa-list-alt" aria-hidden="true"></i>
           <span>Promos</span></a
         >
-        <a href="#"
+        <a href="#" data-page="referentiel"
           ><i class="fa fa-calendar-plus-o" aria-hidden="true"></i
           ><span>Référentiels</span></a
         >
-        <a href="#"
+        <a href="#" data-page="utilisateur"
           ><i class="fa fa-user-circle-o" aria-hidden="true"></i
           ><span>Utilisateurs</span></a
         >
-        <a href="#"
+        <a href="#" data-page="visiteur"
           ><i class="fa fa-user-circle-o" aria-hidden="true"></i
           ><span>Visiteurs</span></a
         >
-        <a href="#"
+        <a href="#" data-page="presence"
           ><i class="fa fa-user-circle-o" aria-hidden="true"></i
           ><span>Presences</span></a
         >
-        <a href="#"
+        <a href="#" data-page="evenement"
           ><i class="fa fa-calendar-plus-o" aria-hidden="true"></i
           ><span>Événements</span></a
         >
       </nav>
     </div>
 
-    <section class="home-section">
+    <section class="home-section" id="apprenantPageId">
       <div class="title">
         <div class="left">Apprenants</div>
         <div class="right">Promos * Liste * Détails - Apprenants</div>
@@ -123,7 +124,7 @@
       <div class="conteneur">
         <div class="contain1">
           <span>Promotion :</span>
-          <span> promotion 6 </span>
+          <span id="laPromoActive"> promotion 6 </span>
         </div>
         <div class="contain2">
           <span>Référentiels :</span>&ensp;
@@ -269,6 +270,83 @@
                   <a href="mypage.php?itemsPerPage=30">30</a>
                 </div>
                 <div class="pagination"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">&copy; Sonatel Academy</footer>
+    </section>
+
+    <section class="home-section hidde-page" id="promosPageId">
+      <div class="title">
+        <div class="left">Promotions</div>
+        <div class="right">Promos * Liste</div>
+      </div>
+      <div class="content">
+        <div class="container">
+          <link rel="stylesheet" href="./assets/css/promotions.css" />
+          <div class="flex-col-left"></div>
+          <div class="flex-col-right">
+            <div class="line2">
+              <div class="div1">Liste Des Promotions <span>3</span></div>
+              <div class="div2">
+                <form action="#" method="post" class="search-form">
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Rechercher ici..."
+                    maxlength="100"
+                    value=""
+                    id="searchFilterPromo"
+                  />
+                  <button
+                    type="submit"
+                    name="recherche"
+                    class="fas fa-search"
+                  ></button>
+                </form>
+                <button
+                  class="btn-hover nouvelle"
+                  type="button"
+                  class="ajouter"
+                  id="openPopup"
+                >
+                  + Nouvelle
+                </button>
+              </div>
+            </div>
+            <!-- Table -->
+            <div class="container-table">
+              <table class="line5">
+                <thead>
+                  <tr>
+                    <th class="titre" data-label="Libelle">Libelle</th>
+                    <th class="titre" data-label="date-debut">Date Début</th>
+                    <th class="titre" data-label="date-fin">Date FIn</th>
+                    <th class="titre" data-label="actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-list-promo"></tbody>
+              </table>
+              <div class="footer-table">
+                <div class="items-per-page">
+                  <label>Items par page : </label>
+                  <a href="mypage.php?itemsPerPage=10">10</a>
+                  <a href="mypage.php?itemsPerPage=20">20</a>
+                  <a href="mypage.php?itemsPerPage=30">30</a>
+                </div>
+                <div class="pagination pagination-promo">
+                  <a href="#" class="page-link prev"
+                    ><i class="fas fa-angle-left"></i
+                  ></a>
+                  <a href="#" class="page-link active">0</a>
+                  <a href="#" class="page-link">1</a>
+                  <a href="#" class="page-link">2</a>
+                  <a href="#" class="page-link next"
+                    ><i class="fas fa-angle-right"></i
+                  ></a>
+                </div>
               </div>
             </div>
           </div>
@@ -634,9 +712,66 @@
         </div>
       </div>
     </div>
+
+    <div class="popupPromo" id="popupPromo">
+      <div class="display">
+        <div class="popup-content">
+          <span class="close-btn">&times;</span>
+          <h3>Ajouter une nouvelle promotion</h3>
+          <form id="promoForm">
+            <div class="content">
+              <label for="libellePromo">Libelle Promotion</label>
+              <input
+                type="text"
+                placeholder="Entrer une promotion"
+                id="libellePromo"
+                name="libellePromo"
+                class="form-control3"
+              />
+              <span class="error-message">error</span>
+            </div>
+            <div class="content">
+              <label for="promoNum">Numero Promotion</label>
+              <input
+                type="text"
+                placeholder="Entrer le numéro"
+                id="promoNum"
+                name="promoNum"
+                class="form-control3"
+              />
+              <span class="error-message">error</span>
+            </div>
+            <div class="content">
+              <label for="dateDebut">Date début</label>
+              <input
+                type="date"
+                id="dateDebut"
+                name="dateDebut"
+                class="form-control3"
+              />
+              <span class="error-message">error</span>
+            </div>
+            <div class="content">
+              <label for="dateFin">Date Fin</label>
+              <input
+                type="date"
+                id="dateFin"
+                name="dateFin"
+                class="form-control3"
+              />
+              <span class="error-message">error</span>
+            </div>
+            <button type="submit" class="btn">Ajouter</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
   <script src="./assets/js/db.js" type="module"></script>
   <script src="./assets/js/utils.js" type="module"></script>
+  <script src="./assets/js/apprenant.js" type="module"></script>
+  <script src="./assets/js/promotions.js" type="module"></script>
+
   <script src="./assets/js/main.js" type="module"></script>
   <script src="./assets/js/theme.js" type="module"></script>
   <script>
@@ -658,5 +793,20 @@
       selectItems.style.display = "none";
       selectItems.checked = false;
     }
+  </script>
+  <script>
+    const ouvrirPopup = document.getElementById("openPopup");
+    const popup = document.getElementById("popupPromo");
+    const fermerPopup = document.querySelector(".close-btn");
+
+    ouvrirPopup.addEventListener("click", () => (popup.style.display = "flex"));
+
+    fermerPopup.addEventListener("click", () => (popup.style.display = "none"));
+
+    window.addEventListener("click", (e) => {
+      if (e.target === popup) {
+        popup.style.display = "none";
+      }
+    });
   </script>
 </html>

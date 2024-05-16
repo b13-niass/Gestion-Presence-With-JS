@@ -149,7 +149,7 @@ const DB = {
       image:
         "https://img.freepik.com/photos-premium/etudiant-afro-americain-joyeux-heureux-qui-reve-obtenir-diplome-porte-papiers-bloc-notes_580432-100.jpg",
       referentiel: 1,
-      promotion: 6,
+      promotion: 4,
     },
     {
       id: 8,
@@ -165,7 +165,7 @@ const DB = {
       image:
         "https://img.freepik.com/photos-premium/etudiant-positif-du-millenaire-noir-livres-jaune_116547-16835.jpg",
       referentiel: 1,
-      promotion: 6,
+      promotion: 4,
     },
     {
       id: 9,
@@ -181,7 +181,7 @@ const DB = {
       image:
         "https://img.freepik.com/photos-premium/etudiant-positif-du-millenaire-noir-livres-jaune_116547-16835.jpg",
       referentiel: 1,
-      promotion: 6,
+      promotion: 4,
     },
     {
       id: 10,
